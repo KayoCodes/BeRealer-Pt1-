@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import ParseSwift
 
 class BeRealerViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     private var posts = [Post]() {

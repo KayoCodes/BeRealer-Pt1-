@@ -298,6 +298,9 @@
                                                 </constraints>
                                                 <state key="normal" title="Button"/>
                                                 <buttonConfiguration key="configuration" style="tinted" title="Select Photo"/>
+                                                <connections>
+                                                    <action selector="onPickedImageTapped:" destination="pkV-2f-sMz" eventType="touchUpInside" id="qCz-2i-yaV"/>
+                                                </connections>
                                             </button>
                                         </subviews>
                                     </stackView>
@@ -342,9 +345,6 @@
                                     <inset key="contentEdgeInsets" minX="-1" minY="0.0" maxX="0.0" maxY="0.0"/>
                                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                     <state key="normal" title=";)" image="camera.fill" catalog="system"/>
-                                    <connections>
-                                        <action selector="onPickedImageTapped:" destination="pkV-2f-sMz" eventType="touchUpInside" id="r6C-gG-Rbh"/>
-                                    </connections>
                                 </button>
                             </barButtonItem>
                         </rightBarButtonItems>
