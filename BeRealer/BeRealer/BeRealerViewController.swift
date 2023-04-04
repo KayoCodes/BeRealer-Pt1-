@@ -37,10 +37,12 @@ class BeRealerViewController: UIViewController, UITableViewDataSource, UITableVi
 
     private func queryPosts() {
         // TODO: Pt 1 - Query Posts
-        
+        let yesterdayDate = Calendar.current.date(byAdding: .day, value: (-1), to: Date())!
         let query = Post.query()
             .include("user")
             .order([.descending("createdAt")])
+            .where("createdAt" >= yesterdayDate)
+            .limit(10)
         query.find { [weak self] result in
             switch result {
             case .success(let posts):

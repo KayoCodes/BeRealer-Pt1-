@@ -26,6 +26,7 @@ struct User:ParseUser{
     var createdAt: Date?
     
     var updatedAt: Date?
+    var lastPostedDate: Date?
     
     var ACL: ParseSwift.ParseACL?
     

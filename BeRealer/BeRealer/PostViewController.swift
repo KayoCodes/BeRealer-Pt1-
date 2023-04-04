@@ -24,6 +24,26 @@ class PostViewController: UIViewController {
     
    
     
+    @IBAction func addPhotosTapped(_ sender: Any) {
+        
+        guard UIImagePickerController.isSourceTypeAvailable(.camera) else {
+            print("❌📷 Camera not available")
+            return
+        }
+
+        // Instantiate the image picker
+        let imagePicker = UIImagePickerController()
+
+        // Shows the camera (vs the photo library)
+        imagePicker.sourceType = .camera
+
+        // Allows user to edit image within image picker flow (i.e. crop, etc.)
+        // If you don't want to allow editing, you can leave out this line as the default value of `allowsEditing` is false
+        imagePicker.allowsEditing = true
+        imagePicker.delegate = self
+        present(imagePicker,animated: true)
+        
+    }
     
     @IBAction func onPickedImageTapped(_ sender: Any) {
         var config = PHPickerConfiguration()
@@ -67,10 +87,26 @@ class PostViewController: UIViewController {
             DispatchQueue.main.async {
                 switch result {
                 case .success(let post):
+                    if var currenUser = User.current{
+                        currenUser.lastPostedDate = Date()
+                        currenUser.save{
+                            [weak self] result in
+                            switch result{
+                            case .success(let user):
+                                print("User Saved!\(user)")
+                                DispatchQueue.main.async {
+                                                // Return to previous view controller
+                                                self?.navigationController?.popViewController(animated: true)
+                                            }
+                            case .failure(let error):
+                                self?.showAlert(description: error.localizedDescription)
+                            }
+                        }
+                    }
                     print("✅ Post Saved! \(post)")
 
                     // Return to previous view controller
-                    self?.navigationController?.popViewController(animated: true)
+                    //self?.navigationController?.popViewController(animated: true)
 
                 case .failure(let error):
                     self?.showAlert(description: error.localizedDescription)
@@ -147,5 +183,19 @@ extension PostViewController: PHPickerViewControllerDelegate{
         }
         
         
+    }
+}
+
+extension PostViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        
+        picker.dismiss(animated: true)
+        guard let image = info[.editedImage] as? UIImage else {
+                print("❌📷 Unable to get image")
+                return
+            }
+        photoimg.image = image
+        pickedImage = image
+       
     }
 }

@@ -19,6 +19,8 @@ class BeRealerTableViewCell: UITableViewCell {
     
     @IBOutlet weak var captionField: UILabel!
     
+    @IBOutlet private weak var blurView: UIVisualEffectView!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -31,11 +33,9 @@ class BeRealerTableViewCell: UITableViewCell {
         if let user = post.user {
             usernameField.text = user.username
         }
-
-        // Image
+// Image
         if let imageFile = post.imageFile,
            let imageUrl = imageFile.url {
-            
             // Use AlamofireImage helper to fetch remote image from URL
             imageDataRequest = AF.request(imageUrl).responseImage { [weak self] response in
                 switch response.result {
@@ -48,13 +48,20 @@ class BeRealerTableViewCell: UITableViewCell {
                 }
             }
         }
-
-        // Caption
+// Caption
         captionField.text = post.caption
 
-        // Date
         if let date = post.createdAt {
             dateField.text = DateFormatter.postFormatter.string(from: date)
+            
+        }
+        if let currentUser = User.current,
+           let lastPostedDate = currentUser.lastPostedDate,
+           let postCreatedDate = post.createdAt,
+           let diffHours = Calendar.current.dateComponents([.hour], from: postCreatedDate,to: lastPostedDate).hour{
+            blurView.isHidden = abs(diffHours) < 24
+        }else{
+            blurView.isHidden = false
         }
 
     }
